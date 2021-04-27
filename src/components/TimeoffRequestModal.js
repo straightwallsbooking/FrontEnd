@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { DatePicker } from './DatePicker';
 import { makeGetRequest } from '../utils/request';
-import { Button, Select, TextareaAutosize } from '@material-ui/core';
+import { Button, Select, Table, TableBody, TableCell, TableRow, TextareaAutosize } from '@material-ui/core';
+import moment from 'moment';
 
 function rand() {
     return Math.round(Math.random() * 20) - 10;
@@ -35,10 +36,11 @@ export default function TimeoffRequestModal(props) {
     const classes = useStyles();
     const [holidayTypes, setholidayTypes] = React.useState([])
     const [typeSelected, settypeSelected] = React.useState(null)
+    const [errorMessage, seterrorMessage] = React.useState("")
     const [reason, setreason] = React.useState("")
     const [to, setTo] = React.useState(new Date())
     const [from, setFrom] = React.useState(new Date())
-    
+    const { myTimeOffRequests } = props
     const getHolidayTypes = async () => {
         try {
             const res = await makeGetRequest("", '/holidayTypes')
@@ -55,52 +57,103 @@ export default function TimeoffRequestModal(props) {
     const handleClose = () => {
         props.closeModal()
     };
-    const onChangeTo = (date) =>{
+    const onChangeTo = (date) => {
         setTo(date)
     }
-    const onChangeFrom = (date) =>{
+    const onChangeFrom = (date) => {
         setFrom(date)
     }
-    const initiateRequest= () =>{
-        if(!to || !from || !typeSelected){
+    const initiateRequest = () => {
 
-        }else{
-            props.requestTimeOff(to,from,typeSelected,reason)
-            handleClose()
+        if (!to || !from || !typeSelected) {
+            seterrorMessage("To, From and Type Are Required Field")
+        } else if ((moment(from) > moment(to)) || moment(from) < moment()) {
+            seterrorMessage("Please select a valid range")
+        }
+        else {
+            let leaveExist = false
+            let t = moment(from)
+            let e = moment(to).add(1, 'day')
+            do {
+                if (
+                    myTimeOffRequests.filter(r => {
+                        let ll = false
+                        let tt = moment(r.startDate)
+                        let ee = moment(r.endDate).add(1, 'day')
+                        do {
+                            if (tt.format('YYYY-MM-DD') == t.format('YYYY-MM-DD')) {
+                                ll = true
+                                break
+                            }
+                            tt.add(1, 'day')
+                        } while (tt < ee)
+                        return ll
+
+                    }
+                    ).length
+                ) {
+                    leaveExist = true
+                    break
+                }
+                t.add(1, 'day')
+            } while (t <= e)
+            if (!leaveExist) {
+                props.requestTimeOff(from, to, typeSelected, reason)
+                handleClose()
+            } else {
+                seterrorMessage('Some of the dates are already holidays as per your schedule, please choose different range')
+            }
         }
     }
     const body = (
         <div style={modalStyle} className={classes.paper}>
-            <div>
-                <label>From </label>
-                <DatePicker value={from} onChange={onChangeFrom} />
-                <label>To</label>
-                <DatePicker value={to} onChange={onChangeTo} />
-            </div>
-            <div>
-                <label>Type</label>
-                <Select
-                    native
-                    onChange={(e) => { settypeSelected(e.target.value) }}
-                    inputProps={{
-                        name: 'age',
-                        id: 'age-native-simple',
-                    }}
-                    value={typeSelected}
-                >
-                    {holidayTypes.map((e, i) => {
-                        return <option value={e.id}>{e.type}</option>
+            {errorMessage ? <p style={{ color: 'red' }}>{errorMessage}</p> : null}
+            <Table>
+                <TableBody>
+                    <TableRow>
+                        <TableCell>From
+                        </TableCell>
+                        <TableCell><DatePicker value={from} onChange={onChangeFrom} />
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>To
+                        </TableCell>
+                        <TableCell> <DatePicker value={to} onChange={onChangeTo} />
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Type
+                        </TableCell>
+                        <TableCell> <Select
+                            native
+                            onChange={(e) => { settypeSelected(e.target.value) }}
+                            inputProps={{
+                                name: 'age',
+                                id: 'age-native-simple',
+                            }}
+                            value={typeSelected}
+                        >
+                            {holidayTypes.map((e, i) => {
+                                return <option value={e.id}>{e.type}</option>
 
-                    })}
-                </Select>
-            </div>
-            <div>
-                <label>Reason for request</label>
-                <TextareaAutosize value={reason} onChange={(e)=>setreason(e.target.value)}></TextareaAutosize>
-            </div>
-            <div>
-                <Button onClick={initiateRequest}>Submit</Button>
-                <Button onClick={handleClose}>Cancel</Button>
+                            })}
+                        </Select>
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Reason for request
+                        </TableCell>
+                        <TableCell> <TextareaAutosize value={reason} onChange={(e) => setreason(e.target.value)}></TextareaAutosize>
+                        </TableCell>
+                    </TableRow>
+
+                </TableBody>
+            </Table>
+
+            <div style={{display:'flex',gap:'10px',justifyContent:'center'}}>
+                <Button color="primary" variant="contained" onClick={initiateRequest}>Submit</Button>
+                <Button onClick={handleClose} variant="contained" color="secondary">Cancel</Button>
             </div>
             <TimeoffRequestModal />
         </div>

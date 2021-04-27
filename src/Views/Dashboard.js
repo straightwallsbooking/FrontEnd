@@ -56,15 +56,16 @@ export class Dashboard extends Component {
                             <ReportsAndActionTable {...this.state} /> : null}
                     </Grid>
                     <Grid item xs={6} lg={6}>
-                        <ManagerReportsAndActions />
+                        <UpcomingHolidaysTable />
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} >
                     <Grid item xs={6} lg={6}>
-                            <MyCurrentApprovedTimeTable {...this.state} /> 
+                        <MyCurrentApprovedTimeTable from={'dashboard'} label={"My Current Approved Time Off Requests"} myTimeOffRequests={this.state.myTimeOffRequests.filter(r => r.status_id === 6)} />
                     </Grid>
                     <Grid item xs={6} lg={6}>
-                        <UpcomingHolidaysTable />
+                        {this.state.profile?.role_id == 4 ?
+                            <ManagerReportsAndActions /> : null }
                     </Grid>
                 </Grid>
             </div>

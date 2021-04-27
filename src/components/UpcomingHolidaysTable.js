@@ -8,6 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { Typography } from '@material-ui/core';
+import HolidayFeed from 'uk-bank-holidays';
 
 
 const StyledTableCell = withStyles((theme) => ({
@@ -18,10 +19,10 @@ const StyledTableCell = withStyles((theme) => ({
   body: {
     fontSize: 14,
   },
-  root:{
-    textAlign:"center"
+  root: {
+    textAlign: "center"
   }
-  
+
 }))(TableCell);
 
 const StyledTableRow = withStyles((theme) => ({
@@ -33,15 +34,15 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+function createData(name, calories) {
+  return { name, calories };
 }
 
 const rows = [
   createData('Date 1', "Cristmas"),
   createData('Date 2', "Eid"),
   createData('Date 3', "Holi"),
-  
+
 ];
 
 const useStyles = makeStyles({
@@ -53,7 +54,8 @@ const useStyles = makeStyles({
   tableContainer: {
     border: "1px black solid",
     padding: "14px",
-    width: "auto"
+    width: "auto",
+    height: '210px',
   }
 });
 
@@ -61,26 +63,40 @@ const useStyles = makeStyles({
 
 export default function UpcomingHolidaysTable() {
   const classes = useStyles();
+  const [holidays, setHolidays] = React.useState([])
+  React.useEffect(() => {
+   const ss = async () =>{
+    let feed = new HolidayFeed();
+    await feed.load();
+
+    let endland = feed.divisions('england-and-wales');
+    let pubH = endland.holidays(new Date())
+    // .filter(h=>!h.title.includes('bank') && !h.title.includes('Bank'))
+    .map(h => createData(h.date,h.title))
+    setHolidays([...pubH])
+   }
+   ss()
+  }, [])
 
   return (
     <>
       <Typography > My Upcoming Holidays</Typography>
       <TableContainer className={classes.tableContainer} component={Paper}>
         <Table className={classes.table} aria-label="customized table">
-          <TableHead style={{border:"2px solid black"}}>
+          <TableHead style={{ border: "2px solid black" }}>
             <TableRow>
               <StyledTableCell>Date</StyledTableCell>
               <StyledTableCell align="center">Name</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {holidays.map((row) => (
               <StyledTableRow key={row.name}>
-                <StyledTableCell style={{borderRight:"2px solid black"}} component="th" scope="row">
+                <StyledTableCell style={{ borderRight: "2px solid black" }} component="th" scope="row">
                   {row.name}
                 </StyledTableCell>
                 <StyledTableCell align="right">{row.calories}</StyledTableCell>
-                </StyledTableRow>
+              </StyledTableRow>
             ))}
           </TableBody>
         </Table>

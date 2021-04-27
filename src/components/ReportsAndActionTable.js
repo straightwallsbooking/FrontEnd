@@ -58,8 +58,8 @@ export default function ReportsAndActionTable(props) {
   const {vacationBalance,casualBalance,sickBalance} = props.myTimeOffDetails
   const rows = [
     createData(<EventAvailableIcon />, `Available Time Off Balance: ${vacationBalance} Days Vacation Time & ${casualBalance+sickBalance} Days other`),
-    createData(<VisibilityIcon />, <Link to='/requesttimeoff'>{"View My Outstanding Time Off Balance"}</Link>),
-    createData(<AddCircleOutlineIcon />, "Request Time off"),
+    createData(<VisibilityIcon />, <Link to='/outstandingrequests'>{"View My Outstanding Time Off Balance"}</Link>),
+    createData(<AddCircleOutlineIcon />, <Link to='/requesttimeoff'>{"Request Time off"}</Link>),
   ];
   return (<>
     <Typography > Reports And Actions</Typography>

@@ -1,5 +1,6 @@
 import { Button, Container, Typography } from '@material-ui/core'
 import React, { Component } from 'react'
+import AlternateDatesModal from './AlternateDatesModal';
 import RequestModal from './TimeoffRequestModal'
 
 
@@ -39,7 +40,7 @@ export class BalanceAsOfDate extends Component {
     }
 
     render() {
-        const { myTimeOffDetails, requestTimeOff,setMyTimeOffDetails } = this.props
+        const { myTimeOffDetails, requestTimeOff,setMyTimeOffDetails,myTimeOffRequests } = this.props
         return (
             <div style={{ margin: "0 10px", display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
                 <Typography variant={'h4'} style={useStyles.first}>Balance As Of </Typography>
@@ -58,7 +59,8 @@ export class BalanceAsOfDate extends Component {
                     <Typography>{myTimeOffDetails ? myTimeOffDetails.sickBalance : "20"} Days</Typography>
                 </Container>
                 <Button onClick={() => this.setState({ ...this.state, openRequestModal: true })} style={useStyles.last}>Request Time Off</Button>
-                <RequestModal  requestTimeOff={requestTimeOff} open={this.state.openRequestModal} closeModal={this.closeModal} />
+                <RequestModal  myTimeOffRequests={myTimeOffRequests} requestTimeOff={requestTimeOff} open={this.state.openRequestModal} closeModal={this.closeModal} />
+                <AlternateDatesModal  {...this.props} />
             </div>
         )
     }

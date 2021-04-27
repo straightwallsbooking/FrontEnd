@@ -1,0 +1,22 @@
+p {
+margin:0;
+padding:0;
+}
+
+.mainHeading{
+    padding:0;
+    text-align: left;
+    border-bottom: 1px solid rgba(224, 224, 224, 1);
+    margin: 0 0 0 0;
+}
+.tbl{
+    margin:0 auto;
+    width: fit-content !important;
+}
+.tdl{
+    /* margin: 0 !important; */
+    padding: 0 10px     !important;
+}
+#itemclick:first-of-type{
+     margin: 20px auto 0 auto !important;  
+}

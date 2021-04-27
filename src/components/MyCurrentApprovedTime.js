@@ -11,83 +11,87 @@ import { Typography } from '@material-ui/core';
 
 
 const StyledTableCell = withStyles((theme) => ({
-    head: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
-      fontSize:14
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+    fontSize: 14
+  },
+  root: {
+    textAlign: "center"
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
     },
-    root:{
-      textAlign:"center"
-    },
-    body: {
-      fontSize: 14,
-    },
-  }))(TableCell);
-  
-  const StyledTableRow = withStyles((theme) => ({
-    root: {
-      '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-      },
-      border: "2px solid black"
-    },
-  }))(TableRow);
-  
-  
-  
-  
-  const useStyles = makeStyles({
-    table: {
-    },
-    tableLabel: {
-      textAlign: 'left'
-    },
-    tableContainer: {
-      border: "1px black solid",
-      padding: "14px",
-      width: "auto"
-    },
-    totalLeavesRow:{
-      
-    }
-  });
-  
-  
-  
-  function createData(startDate,endDate,type,totalDays) {
-    return { startDate,endDate,type,totalDays};
+    border: "2px solid black"
+  },
+}))(TableRow);
+
+
+
+
+const useStyles = makeStyles({
+  table: {
+  },
+  tableLabel: {
+    textAlign: 'left'
+  },
+  tableContainer: {
+    border: "1px black solid",
+    padding: "14px",
+    width: "auto"
+  },
+  totalLeavesRow: {
+
   }
+});
+
+
+
+function createData(startDate, endDate, type, totalDays) {
+  return { startDate, endDate, type, totalDays };
+}
 export default function MyCurrentApprovedTimeTable(props) {
-    const classes = useStyles();
-    const approvedReqs = props.myTimeOffRequests.filter((req) => req.status_id === 6)
-    const rows = approvedReqs.map(req=>createData(req.startDate,req.endDate,req.leave?.type,req.totalDays))
-    return (
-      <>
-      <Typography >My Current Approved Time Off Requests</Typography>
-        <TableContainer className={classes.tableContainer} component={Paper}>
-      <Table className={classes.table} aria-label="customized table">
-        <TableHead style={{border:"2px solid black"}}>
-          <TableRow>
-            <StyledTableCell>Start Date</StyledTableCell>
-            <StyledTableCell align="right">End Date</StyledTableCell>
-            <StyledTableCell align="right">Type</StyledTableCell>
-            <StyledTableCell align="right">Total Days</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.startDate}>
-              <StyledTableCell style={{borderRight:"2px solid black"}} component="th" scope="row">
-                {row.startDate}
-              </StyledTableCell>
-              <StyledTableCell style={{borderRight:"2px solid black"}} align="right">{row.endDate}</StyledTableCell>
-              <StyledTableCell style={{borderRight:"2px solid black"}} align="right">{row.type}</StyledTableCell>
-              <StyledTableCell align="right">{row.totalDays}</StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Typography className={classes.totalLeavesRow}>{rows.length ? "Total: 12" : "No requests found" }</Typography>
-    </TableContainer> </>
-    )
+  const classes = useStyles();
+  // const approvedReqs = props.myTimeOffRequests.filter((req) => req.status_id === 6)
+  const rows = props.myTimeOffRequests.map(req => createData(req.startDate, req.endDate, req.leave?.type, req.totalDays))
+  return (
+    <>
+      <Typography >{props.label}</Typography>
+      <TableContainer style={{ height: `${props.from == 'dashboard' ? '210px' : 'as'}` }} className={classes.tableContainer} component={Paper}>
+        <Table className={classes.table} aria-label="customized table">
+          <TableHead style={{ border: "2px solid black" }}>
+            <TableRow>
+              <StyledTableCell>Start Date</StyledTableCell>
+              <StyledTableCell align="right">End Date</StyledTableCell>
+              <StyledTableCell align="right">Type</StyledTableCell>
+              <StyledTableCell align="right">Total Days</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <StyledTableRow key={row.startDate}>
+                <StyledTableCell style={{ borderRight: "2px solid black" }} component="th" scope="row">
+                  {row.startDate}
+                </StyledTableCell>
+                <StyledTableCell style={{ borderRight: "2px solid black" }} align="right">{row.endDate}</StyledTableCell>
+                <StyledTableCell style={{ borderRight: "2px solid black" }} align="right">{row.type}</StyledTableCell>
+                <StyledTableCell align="right">{row.totalDays}</StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <Typography className={classes.totalLeavesRow}>{rows.reduce((t, c) => {
+          return t + c.totalDays
+        }, 0) ? `Total: ${rows.reduce((t, c) => {
+          return t + c.totalDays
+        }, 0)}` : "No requests found"}</Typography>
+      </TableContainer> </>
+  )
 }

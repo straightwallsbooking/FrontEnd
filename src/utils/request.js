@@ -4,7 +4,7 @@ export const makePOSTRequest = async (body,endpoint) =>{
     const res = await axios({
         method: "post",
         url: endpoint,
-        baseURL: "http://localhost:3000",
+        baseURL: "http://localhost:3001",
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
@@ -18,8 +18,8 @@ export const makeGetRequest = async (params,endpoint) =>{
     try{
       const res = await axios({
         method: "get",
-        url: "http://localhost:3000"+endpoint+params,
-        // baseURL: "http://localhost:3000",
+        url: "http://localhost:3001"+endpoint+params,
+
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'

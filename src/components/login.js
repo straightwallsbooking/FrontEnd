@@ -34,10 +34,19 @@ export class login extends Component {
     }
     render() {
         return (this.state.isAuthenticated ? <Redirect to="/dashboard" /> :
-            <div>
-                <Input type={"text"} onChange={(e) => { this.setState({ email: e.target.value }) }} ></Input>
+            <div style={{
+                display:"flex",
+                flexDirection:'column',
+                gap:'25px',
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                WebkitTransform: "translate(-50%, -50%)",
+                transform: "translate(-50%, -50%)"
+            }}>
+                <Input style={{borderRadius:'500px'}} type={"text"} onChange={(e) => { this.setState({ email: e.target.value }) }} ></Input>
                 <Input type={"password"} onChange={(e) => { this.setState({ password: e.target.value }) }} ></Input>
-                <Button onClick={this.login}>Login</Button>
+                <Button color="primary" variant="outlined" onClick={this.login}>Login</Button>
             </div>
         )
     }
