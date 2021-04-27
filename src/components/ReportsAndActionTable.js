@@ -28,7 +28,7 @@ const StyledTableRow = withStyles((theme) => ({
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.action.hover,
     },
-    border:"2px solid black"
+    border: "2px solid black"
   },
 }))(TableRow);
 
@@ -44,21 +44,21 @@ const useStyles = makeStyles({
   tableContainer: {
     border: "1px black solid",
     padding: "14px",
-    width:"auto"
+    width: "auto"
   }
 });
 
 
 function createData(icon, action) {
-  return {icon, action };
+  return { icon, action };
 }
 
 export default function ReportsAndActionTable(props) {
   const classes = useStyles();
-  const {vacationBalance,casualBalance,sickBalance} = props.myTimeOffDetails
+  const { vacationBalance, casualBalance, sickBalance } = props.myTimeOffDetails
   const rows = [
-    createData(<EventAvailableIcon />, `Available Time Off Balance: ${vacationBalance} Days Vacation Time & ${casualBalance+sickBalance} Days other`),
-    createData(<VisibilityIcon />, <Link to='/outstandingrequests'>{"View My Outstanding Time Off Balance"}</Link>),
+    createData(<EventAvailableIcon />, `Available Time Off Balance: ${vacationBalance} Days Vacation Time & ${casualBalance + sickBalance} Days other`),
+    createData(<VisibilityIcon />, <Link to='/outstandingrequests'>{"View My Outstanding Time Off Requests"}</Link>),
     createData(<AddCircleOutlineIcon />, <Link to='/requesttimeoff'>{"Request Time off"}</Link>),
   ];
   return (<>
@@ -66,9 +66,9 @@ export default function ReportsAndActionTable(props) {
     <TableContainer className={classes.tableContainer} component={Paper}>
       <Table className={classes.table} aria-label="customized table">
         <TableBody>
-          {rows.map((row,i) => (
+          {rows.map((row, i) => (
             <StyledTableRow key={i}>
-              <StyledTableCell style={{borderRight:"2px solid black",textAlign:"center"}} component="th" scope="row">
+              <StyledTableCell style={{ borderRight: "2px solid black", textAlign: "center" }} component="th" scope="row">
                 {row.icon}
               </StyledTableCell>
               <StyledTableCell align="right">{row.action}</StyledTableCell>

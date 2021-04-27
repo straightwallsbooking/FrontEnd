@@ -36,8 +36,8 @@ function createData(link) {
 
 const rows = [
   createData(<Link to='/manageractions/processrequests'>Process Employee Time Off Requests</Link>),
-  createData('View All Time Off Requests with Employee Filter'),
-  createData('View All Employees Time Off Status On A Selected Date')
+  createData(<Link to='/manageractions/employee-requests'>View All Time Off Requests with Employee Filter</Link>),
+  createData(<Link to='/manageractions/date-employee-status'>View All Employees Time Off Status On A Selected Date</Link>)
 ];
 
 const useStyles = makeStyles({

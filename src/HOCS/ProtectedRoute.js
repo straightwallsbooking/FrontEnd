@@ -2,6 +2,7 @@ import { Button } from "@material-ui/core";
 import React, { Component, useEffect } from "react";
 // React router dom
 import { Redirect, Route, useHistory } from "react-router-dom";
+import Header from "../components/Header";
 import { makeGetRequest } from "../utils/request";
 
 /*
@@ -34,11 +35,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
       render={props =>
         !isRequesting && isAuthenticated ? (
           <>
-            <Button onClick={async () => {
-              await makeGetRequest("", "/auth/logout");
-              await makeGetRequest("", '/auth/checklogin')
-              history.push('/')
-            }} >Logout</Button>
+           <Header />
             <Component {...props} />
           </>
         ) : !isRequesting ? (
